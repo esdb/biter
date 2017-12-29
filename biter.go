@@ -2,8 +2,10 @@ package biter
 
 import (
 	"math/bits"
+	"math"
 )
 
+const SetAllBits = Bits(math.MaxUint64)
 var SetBits []Bits
 
 func init() {
