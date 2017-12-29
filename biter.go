@@ -5,13 +5,15 @@ import (
 	"math"
 )
 
+const NotFound = 64
 const SetAllBits = Bits(math.MaxUint64)
+
 var SetBits []Bits
 
 func init() {
 	SetBits = make([]Bits, 64)
 	for i := 0; i < 64; i++ {
-		SetBits[i] = 1 << uint(63 - i)
+		SetBits[i] = 1 << uint(63-i)
 	}
 }
 
