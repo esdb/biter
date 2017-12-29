@@ -7,42 +7,46 @@ import (
 
 func Test_zero(t *testing.T) {
 	should := require.New(t)
-	iter := ScanForward(0)
+	bits := Bits(0)
+	iter := bits.ScanForward()
 	should.Equal(64, iter())
 	should.Equal(64, iter())
-	iter = ScanBackward(0)
+	iter = bits.ScanBackward()
 	should.Equal(64, iter())
 	should.Equal(64, iter())
 }
 
 func Test_one(t *testing.T) {
 	should := require.New(t)
-	iter := ScanForward(1)
+	bits := Bits(1)
+	iter := bits.ScanForward()
 	should.Equal(63, iter())
 	should.Equal(64, iter())
 	should.Equal(64, iter())
-	iter = ScanBackward(1)
+	iter = bits.ScanBackward()
 	should.Equal(0, iter())
 	should.Equal(64, iter())
 }
 
 func Test_two(t *testing.T) {
 	should := require.New(t)
-	iter := ScanForward(2) // 10
+	bits := Bits(2)
+	iter := bits.ScanForward() // 10
 	should.Equal(62, iter())
 	should.Equal(64, iter())
-	iter = ScanBackward(2)
+	iter = bits.ScanBackward()
 	should.Equal(1, iter())
 	should.Equal(64, iter())
 }
 
 func Test_three(t *testing.T) {
 	should := require.New(t)
-	iter := ScanForward(3) // 11
+	bits := Bits(3)
+	iter := bits.ScanForward() // 11
 	should.Equal(62, iter())
 	should.Equal(63, iter())
 	should.Equal(64, iter())
-	iter = ScanBackward(3)
+	iter = bits.ScanBackward()
 	should.Equal(0, iter())
 	should.Equal(1, iter())
 	should.Equal(64, iter())
@@ -50,11 +54,12 @@ func Test_three(t *testing.T) {
 
 func Test_9223372036854775809(t *testing.T) {
 	should := require.New(t)
-	iter := ScanForward(9223372036854775809) // 1000000000000000000000000000000000000000000000000000000000000001
+	bits := SetBits[0] | SetBits[63]
+	iter := bits.ScanForward() // 1000000000000000000000000000000000000000000000000000000000000001
 	should.Equal(0, iter())
 	should.Equal(63, iter())
 	should.Equal(64, iter())
-	iter = ScanBackward(9223372036854775809)
+	iter = bits.ScanBackward()
 	should.Equal(0, iter())
 	should.Equal(63, iter())
 	should.Equal(64, iter())
