@@ -7,60 +7,62 @@ import (
 
 func Test_zero(t *testing.T) {
 	should := require.New(t)
-	bits := Bits(0)
+	bits := SetBits[0]
 	iter := bits.ScanForward()
-	should.Equal(64, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(0), iter())
+	should.Equal(NotFound, iter())
 	iter = bits.ScanBackward()
-	should.Equal(64, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(63), iter())
+	should.Equal(NotFound, iter())
 }
 
 func Test_one(t *testing.T) {
 	should := require.New(t)
-	bits := Bits(1)
+	bits := SetBits[1]
 	iter := bits.ScanForward()
-	should.Equal(63, iter())
-	should.Equal(64, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(1), iter())
+	should.Equal(NotFound, iter())
+	should.Equal(NotFound, iter())
 	iter = bits.ScanBackward()
-	should.Equal(0, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(62), iter())
+	should.Equal(NotFound, iter())
 }
 
 func Test_two(t *testing.T) {
 	should := require.New(t)
-	bits := Bits(2)
+	bits := SetBits[2]
 	iter := bits.ScanForward() // 10
-	should.Equal(62, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(2), iter())
+	should.Equal(NotFound, iter())
 	iter = bits.ScanBackward()
-	should.Equal(1, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(61), iter())
+	should.Equal(NotFound, iter())
 }
 
-func Test_three(t *testing.T) {
+func Test_zero_one_two(t *testing.T) {
 	should := require.New(t)
-	bits := Bits(3)
+	bits := SetBits[0] | SetBits[1] | SetBits[2]
 	iter := bits.ScanForward() // 11
-	should.Equal(62, iter())
-	should.Equal(63, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(0), iter())
+	should.Equal(Slot(1), iter())
+	should.Equal(Slot(2), iter())
+	should.Equal(NotFound, iter())
 	iter = bits.ScanBackward()
-	should.Equal(0, iter())
-	should.Equal(1, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(61), iter())
+	should.Equal(Slot(62), iter())
+	should.Equal(Slot(63), iter())
+	should.Equal(NotFound, iter())
 }
 
 func Test_9223372036854775809(t *testing.T) {
 	should := require.New(t)
 	bits := SetBits[0] | SetBits[63]
 	iter := bits.ScanForward() // 1000000000000000000000000000000000000000000000000000000000000001
-	should.Equal(0, iter())
-	should.Equal(63, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(0), iter())
+	should.Equal(Slot(63), iter())
+	should.Equal(NotFound, iter())
 	iter = bits.ScanBackward()
-	should.Equal(0, iter())
-	should.Equal(63, iter())
-	should.Equal(64, iter())
+	should.Equal(Slot(0), iter())
+	should.Equal(Slot(63), iter())
+	should.Equal(NotFound, iter())
 }

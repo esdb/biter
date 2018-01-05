@@ -5,15 +5,16 @@ import (
 	"math"
 )
 
-const NotFound = 64
+type Slot int
+const NotFound Slot = 64
 const SetAllBits = Bits(math.MaxUint64)
 
 var SetBits []Bits
 
 func init() {
 	SetBits = make([]Bits, 64)
-	for i := 0; i < 64; i++ {
-		SetBits[i] = 1 << uint(63-i)
+	for i := uint(0); i < 64; i++ {
+		SetBits[i] = 1 << i
 	}
 }
 
@@ -28,29 +29,29 @@ func (b Bits) Or(anotherBits Bits) Bits {
 }
 
 // from left to right
-func (b Bits) ScanForward() func() int {
-	lastPos := -1
-	return func() int {
+func (b Bits) ScanForward() func() Slot {
+	lastPos := Slot(-1)
+	return func() Slot {
 		if b == 0 {
 			return 64
 		}
-		leadingZeros := 1 + bits.LeadingZeros64(uint64(b))
-		lastPos = lastPos + leadingZeros
-		b = b << uint(leadingZeros)
+		trailingZeros := 1 + bits.TrailingZeros64(uint64(b))
+		lastPos = lastPos + Slot(trailingZeros)
+		b = b >> uint(trailingZeros)
 		return lastPos
 	}
 }
 
 // from right to left
-func (b Bits) ScanBackward() func() int {
-	lastPos := -1
-	return func() int {
+func (b Bits) ScanBackward() func() Slot {
+	lastPos := Slot(-1)
+	return func() Slot {
 		if b == 0 {
 			return 64
 		}
-		trailingZeros := 1 + bits.TrailingZeros64(uint64(b))
-		lastPos = lastPos + trailingZeros
-		b = b >> uint(trailingZeros)
+		leadingZeros := 1 + bits.LeadingZeros64(uint64(b))
+		lastPos = lastPos + Slot(leadingZeros)
+		b = b << uint(leadingZeros)
 		return lastPos
 	}
 }
