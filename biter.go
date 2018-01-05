@@ -10,11 +10,16 @@ const NotFound Slot = 64
 const SetAllBits = Bits(math.MaxUint64)
 
 var SetBits []Bits
+var SetBitsForward []Bits
 
 func init() {
 	SetBits = make([]Bits, 64)
+	SetBitsForward = make([]Bits, 64)
 	for i := uint(0); i < 64; i++ {
 		SetBits[i] = 1 << i
+		for j := i; j < 64; j++ {
+			SetBitsForward[i] |= 1 << j
+		}
 	}
 }
 
