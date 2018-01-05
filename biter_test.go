@@ -14,7 +14,7 @@ func Test_zero(t *testing.T) {
 	iter = bits.ScanBackward()
 	should.Equal(Slot(63), iter())
 	should.Equal(NotFound, iter())
-	bits = SetBitsForward[0]
+	bits = SetBitsForwardFrom[0]
 	iter = bits.ScanForward()
 	should.Equal(Slot(0), iter())
 	should.Equal(Slot(1), iter())
@@ -31,10 +31,14 @@ func Test_one(t *testing.T) {
 	iter = bits.ScanBackward()
 	should.Equal(Slot(62), iter())
 	should.Equal(NotFound, iter())
-	bits = SetBitsForward[1]
+	bits = SetBitsForwardFrom[1]
 	iter = bits.ScanForward()
 	should.Equal(Slot(1), iter())
 	should.Equal(Slot(2), iter())
+	bits = SetBitsForwardUntil[1]
+	iter = bits.ScanForward()
+	should.Equal(Slot(0), iter())
+	should.Equal(Slot(64), iter())
 }
 
 func Test_two(t *testing.T) {
@@ -46,10 +50,15 @@ func Test_two(t *testing.T) {
 	iter = bits.ScanBackward()
 	should.Equal(Slot(61), iter())
 	should.Equal(NotFound, iter())
-	bits = SetBitsForward[2]
+	bits = SetBitsForwardFrom[2]
 	iter = bits.ScanForward()
 	should.Equal(Slot(2), iter())
 	should.Equal(Slot(3), iter())
+	bits = SetBitsForwardUntil[2]
+	iter = bits.ScanForward()
+	should.Equal(Slot(0), iter())
+	should.Equal(Slot(1), iter())
+	should.Equal(Slot(64), iter())
 }
 
 func Test_zero_one_two(t *testing.T) {
